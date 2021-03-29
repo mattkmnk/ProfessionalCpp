@@ -3,7 +3,8 @@
 #include <sstream>
 
 SpreadsheetCell::SpreadsheetCell() : mValue(0) 
-{ }
+{   
+}
 
 SpreadsheetCell::SpreadsheetCell(double initialValue) {
     setValue(initialValue);
@@ -45,4 +46,11 @@ double SpreadsheetCell::stringToDouble(const std::string& inString) const {
         return 0;
     }
     return temp;
+}
+
+SpreadsheetCell& SpreadsheetCell::operator=(const SpreadsheetCell& rhs) {
+    if(this == &rhs) return *this;
+    mValue = rhs.mValue;
+    mString = rhs.mString;
+    return *this;
 }
