@@ -7,23 +7,25 @@ SpreadsheetCell::SpreadsheetCell() : mValue(0)
 }
 
 SpreadsheetCell::SpreadsheetCell(double initialValue) {
-    setValue(initialValue);
+    set(initialValue);
 }
 
 SpreadsheetCell::SpreadsheetCell(const std::string& initialValue) {
-    setString(initialValue);
+    set(initialValue);
 }
 
-void SpreadsheetCell::setValue(double inValue) {
+void SpreadsheetCell::set(double inValue) {
     mValue = inValue;
     mString = doubleToString(mValue);
 }
 
 double SpreadsheetCell::getValue() const {
+    mNumAccesses++;
     return mValue;
 }
 
-void SpreadsheetCell::setString(const std::string& inString) {
+void SpreadsheetCell::set(const std::string& inString) {
+    mNumAccesses++;
     mString = inString;
     mValue = stringToDouble(mString);
 }
@@ -32,13 +34,13 @@ const std::string& SpreadsheetCell::getString() const {
     return mString;
 }
 
-std::string SpreadsheetCell::doubleToString(double inValue) const{
+std::string SpreadsheetCell::doubleToString(double inValue) {
     std::ostringstream ostr;
     ostr << inValue;
     return ostr.str();
 }
 
-double SpreadsheetCell::stringToDouble(const std::string& inString) const {
+double SpreadsheetCell::stringToDouble(const std::string& inString) {
     double temp;
     std::istringstream istr(inString);
     istr >> temp;
@@ -53,4 +55,14 @@ SpreadsheetCell& SpreadsheetCell::operator=(const SpreadsheetCell& rhs) {
     mValue = rhs.mValue;
     mString = rhs.mString;
     return *this;
+}
+
+SpreadsheetCell SpreadsheetCell::operator+(const SpreadsheetCell& cell) const {
+    SpreadsheetCell newCell;
+    newCell.set(getValue() + cell.getValue());
+    return newCell;
+}
+
+void SpreadsheetCell::setColor(Colors color) {
+    mColor = color;
 }
