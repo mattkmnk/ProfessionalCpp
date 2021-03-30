@@ -2,6 +2,8 @@
 
 Spreadsheet::Spreadsheet(int inWidth, int inHeight) :
     mWidth(inWidth), mHeight(inHeight) {
+        mId = sCounter++;
+
         mCells = new SpreadsheetCell* [mWidth];
         for (int i = 0; i < mWidth; i++) {
             mCells[i] = new SpreadsheetCell [mHeight];
@@ -9,6 +11,7 @@ Spreadsheet::Spreadsheet(int inWidth, int inHeight) :
     }
 
 Spreadsheet::Spreadsheet(const Spreadsheet& src) {
+    mId = sCounter++;
     copyFrom(src);
 }
 
@@ -64,6 +67,12 @@ SpreadsheetCell& Spreadsheet::getCellAt(int x, int y) {
     return mCells[x][y];
 }
 
-bool inRange(int val, int upper) {
+bool Spreadsheet::inRange(int val, int upper) {
     return val < upper;
 }
+
+int Spreadsheet::getId() const {
+    return mId;
+}
+
+int Spreadsheet::sCounter;
