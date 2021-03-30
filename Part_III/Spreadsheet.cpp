@@ -1,7 +1,10 @@
+#include <stdexcept>
 #include "Spreadsheet.h"
 
-Spreadsheet::Spreadsheet(int inWidth, int inHeight) :
-    mWidth(inWidth), mHeight(inHeight) {
+Spreadsheet::Spreadsheet(const SpreadsheetApplication& theApp, int inWidth, int inHeight) :
+    mWidth(inWidth > kMaxWidth ? kMaxWidth : inWidth),
+    mHeight(inHeight > kMaxHeight ? kMaxHeight : inHeight),
+    mTheApp(theApp) {
         mId = sCounter++;
 
         mCells = new SpreadsheetCell* [mWidth];
@@ -10,7 +13,8 @@ Spreadsheet::Spreadsheet(int inWidth, int inHeight) :
         }
     }
 
-Spreadsheet::Spreadsheet(const Spreadsheet& src) {
+Spreadsheet::Spreadsheet(const Spreadsheet& src) :
+    mTheApp(src.mTheApp) {
     mId = sCounter++;
     copyFrom(src);
 }
