@@ -1,82 +1,34 @@
-#include <stdexcept>
 #include "Spreadsheet.h"
+#include "SpreadsheetImpl.h"
+#include <utility>
 
-Spreadsheet::Spreadsheet(const SpreadsheetApplication& theApp, int inWidth, int inHeight) :
-    mWidth(inWidth > kMaxWidth ? kMaxWidth : inWidth),
-    mHeight(inHeight > kMaxHeight ? kMaxHeight : inHeight),
-    mTheApp(theApp) {
-        mId = sCounter++;
-
-        mCells = new SpreadsheetCell* [mWidth];
-        for (int i = 0; i < mWidth; i++) {
-            mCells[i] = new SpreadsheetCell [mHeight];
-        }
-    }
-
-Spreadsheet::Spreadsheet(const Spreadsheet& src) :
-    mTheApp(src.mTheApp) {
-    mId = sCounter++;
-    copyFrom(src);
-}
-
-Spreadsheet::~Spreadsheet() {
-    for (int i = 0; i < mWidth; i++) {
-        delete [] mCells[i];
-    }
-    delete [] mCells;
-    mCells = nullptr;
-}
-
-Spreadsheet& Spreadsheet::operator=(const Spreadsheet& rhs) {
-    if(this == &rhs) {
-        return *this;
-    }
-
-    for (int i = 0; i < mWidth; i++) {
-        delete [] mCells[i];
-    }
-    delete [] mCells;
-    mCells = nullptr;
-
-    copyFrom(rhs);
-
-    return *this;
-}
-
-void Spreadsheet::copyFrom(const Spreadsheet& src) {
-    mWidth = src.mWidth;
-    mHeight = src.mHeight;
-    mCells = new SpreadsheetCell* [mWidth];
-    for(int i = 0; i < mWidth; i++) {
-        mCells[i] = new SpreadsheetCell[mHeight];
-    }
-    for(int i = 0; i < mWidth; i++) {
-        for(int j = 0; j < mHeight; j++) {
-            mCells[i][j] = src.mCells[i][j];
-        }
-    }
-}
-
-void Spreadsheet::setCellAt(int x, int y, const SpreadsheetCell& cell) {
-    if(!inRange(x, mWidth) || !inRange(y, mHeight)) {
-        throw std::out_of_range("");
-    }
-    mCells[x][y] = cell;
+void Spreadsheet::setCellAt(int x, int y, const SpreadsheetCell& inCell) {
+    mImpl->setCellAt(x, y, inCell);
 }
 
 SpreadsheetCell& Spreadsheet::getCellAt(int x, int y) {
-    if(!inRange(x, mWidth) || !inRange(y, mHeight)) {
-        throw std::out_of_range("");
-    }
-    return mCells[x][y];
-}
-
-bool Spreadsheet::inRange(int val, int upper) {
-    return val < upper;
+    return mImpl->getCellAt(x, y);
 }
 
 int Spreadsheet::getId() const {
-    return mId;
+    return mImpl->getId();
 }
 
-int Spreadsheet::sCounter;
+Spreadsheet::Spreadsheet(const SpreadsheetApplication& theApp, int inWidth,
+ int inHeight) {
+    mImpl = std::make_unique<SpreadsheetImpl>(theApp, inWidth, inHeight);
+}
+Spreadsheet::Spreadsheet(const SpreadsheetApplication& theApp) {
+    mImpl = std::make_unique<SpreadsheetImpl>(theApp);
+}
+Spreadsheet::Spreadsheet(const Spreadsheet& src) {
+    mImpl = std::make_unique<SpreadsheetImpl>(*src.mImpl);
+}
+Spreadsheet::~Spreadsheet()
+{
+}
+
+Spreadsheet& Spreadsheet::operator=(const Spreadsheet& rhs) {
+    *mImpl = *rhs.mImpl;
+    return *this;
+}

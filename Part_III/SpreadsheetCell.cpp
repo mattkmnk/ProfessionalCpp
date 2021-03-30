@@ -57,12 +57,73 @@ SpreadsheetCell& SpreadsheetCell::operator=(const SpreadsheetCell& rhs) {
     return *this;
 }
 
-SpreadsheetCell SpreadsheetCell::operator+(const SpreadsheetCell& cell) const {
+void SpreadsheetCell::setColor(Colors color) {
+    mColor = color;
+}
+
+SpreadsheetCell operator+(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
     SpreadsheetCell newCell;
-    newCell.set(getValue() + cell.getValue());
+    newCell.set(lhs.getValue() + rhs.getValue());
     return newCell;
 }
 
-void SpreadsheetCell::setColor(Colors color) {
-    mColor = color;
+SpreadsheetCell operator-(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+    SpreadsheetCell newCell;
+    newCell.set(lhs.getValue() - rhs.getValue());
+    return newCell;
+}
+
+SpreadsheetCell operator*(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+    SpreadsheetCell newCell;
+    newCell.set(lhs.getValue() * rhs.getValue());
+    return newCell;
+}
+
+SpreadsheetCell operator/(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+    if(rhs.mValue == 0)
+        throw std::invalid_argument("Divide by zero.");
+    SpreadsheetCell newCell;
+    newCell.set(lhs.getValue() / rhs.getValue());
+    return newCell;
+}
+
+SpreadsheetCell& SpreadsheetCell::operator+=(const SpreadsheetCell& rhs) {
+    set(mValue + rhs.mValue);
+    return *this;
+}
+
+SpreadsheetCell& SpreadsheetCell::operator-=(const SpreadsheetCell& rhs) {
+    set(mValue - rhs.mValue);
+    return *this;
+}
+
+SpreadsheetCell& SpreadsheetCell::operator*=(const SpreadsheetCell& rhs) {
+    set(mValue * rhs.mValue);
+    return *this;
+}
+
+SpreadsheetCell& SpreadsheetCell::operator/=(const SpreadsheetCell& rhs) {
+    if(rhs.mValue == 0)
+        throw std::invalid_argument("Divide by zero.");
+    set(mValue / rhs.mValue);
+    return *this;
+}
+
+bool operator==(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+ return (lhs.mValue == rhs.mValue);
+}
+bool operator<(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+ return (lhs.mValue < rhs.mValue);
+}
+bool operator>(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+ return (lhs.mValue > rhs.mValue);
+}
+bool operator!=(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+ return (lhs.mValue != rhs.mValue);
+}
+bool operator<=(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+ return (lhs.mValue <= rhs.mValue);
+}
+bool operator>=(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs) {
+ return (lhs.mValue >= rhs.mValue);
 }

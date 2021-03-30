@@ -1,25 +1,23 @@
-#include "SpreadsheetCell.h"
+#pragma once
 
+#include "SpreadsheetCell.h"
+#include <memory>
+
+class SpreadsheetImpl;
 class SpreadsheetApplication;
-class Spreadsheet {
+
+class Spreadsheet
+{
 public:
-    Spreadsheet(const SpreadsheetApplication& theApp, int inWidth, int inHeight);
+    Spreadsheet(const SpreadsheetApplication& theApp, int inWidth,
+    int inHeight);
+    Spreadsheet(const SpreadsheetApplication& theApp);
     Spreadsheet(const Spreadsheet& src);
     ~Spreadsheet();
     Spreadsheet& operator=(const Spreadsheet& rhs);
-    void setCellAt(int x, int y, const SpreadsheetCell& cell);
+    void setCellAt(int x, int y, const SpreadsheetCell& inCell);
     SpreadsheetCell& getCellAt(int x, int y);
     int getId() const;
-
-    static const int kMaxWidth = 100;
-    static const int kMaxHeight = 100;
-
 private:
-    bool inRange(int val, int upper);
-    void copyFrom(const Spreadsheet& src);
-    int mWidth, mHeight;
-    SpreadsheetCell** mCells;
-    int mId;
-    static int sCounter;
-    const SpreadsheetApplication& mTheApp;
+    std::unique_ptr<SpreadsheetImpl> mImpl;
 };
