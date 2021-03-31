@@ -1,27 +1,34 @@
 #pragma once
 
+#include <cstddef>
 #include "SpreadsheetCell.h"
 
-class SpreadsheetApplication;
-class SpreadsheetImpl {
-public:
-    SpreadsheetImpl(const SpreadsheetApplication& theApp, int inWidth, int inHeight);
-    SpreadsheetImpl(const SpreadsheetImpl& src);
-    ~SpreadsheetImpl();
-    SpreadsheetImpl& operator=(const SpreadsheetImpl& rhs);
-    void setCellAt(int x, int y, const SpreadsheetCell& cell);
-    SpreadsheetCell& getCellAt(int x, int y);
-    int getId() const;
+class SpreadsheetApplication; // forward declaration
 
-    static const int kMaxWidth = 100;
-    static const int kMaxHeight = 100;
+class SpreadsheetImpl
+{
+public:
+	SpreadsheetImpl(const SpreadsheetApplication& theApp,
+		size_t inWidth, size_t inHeight);
+	SpreadsheetImpl(const SpreadsheetImpl& src);
+	~SpreadsheetImpl();
+	SpreadsheetImpl& operator=(const SpreadsheetImpl& rhs);
+
+	void setCellAt(size_t x, size_t y, const SpreadsheetCell& cell);
+	SpreadsheetCell& getCellAt(size_t x, size_t y);
+
+	size_t getId() const;
+
+	friend void swap(SpreadsheetImpl& first, SpreadsheetImpl& second) noexcept;
 
 private:
-    bool inRange(int val, int upper);
-    void copyFrom(const SpreadsheetImpl& src);
-    int mWidth, mHeight;
-    SpreadsheetCell** mCells;
-    int mId;
-    static int sCounter;
-    const SpreadsheetApplication& mTheApp;
+	bool inRange(size_t val, size_t upper) const;
+
+	size_t mWidth, mHeight;
+	size_t mId;
+	SpreadsheetCell** mCells;
+
+	const SpreadsheetApplication& mTheApp;
+
+	static size_t sCounter;
 };

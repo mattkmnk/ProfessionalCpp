@@ -1,53 +1,40 @@
 #pragma once
+
 #include <string>
+#include <string_view>
 
-class SpreadsheetCell {
+class SpreadsheetCell
+{
 public:
-    friend class Spreadsheet;
-    SpreadsheetCell();
-    SpreadsheetCell(double initialValue);
-    explicit SpreadsheetCell(const std::string& initialValue);
-    void set(double inValue);
-    double getValue() const;
-    void set(const std::string& inString);
-    const std::string& getString() const;
+	SpreadsheetCell() = default;
+	SpreadsheetCell(double initialValue);
+	explicit SpreadsheetCell(std::string_view initialValue);
 
-    SpreadsheetCell& operator=(const SpreadsheetCell& rhs);
-    
-    friend SpreadsheetCell operator+(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend SpreadsheetCell operator-(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend SpreadsheetCell operator*(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend SpreadsheetCell operator/(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
+	void set(double inValue);
+	void set(std::string_view inString);
 
-    SpreadsheetCell& operator+=(const SpreadsheetCell& rhs);
-    SpreadsheetCell& operator-=(const SpreadsheetCell& rhs);
-    SpreadsheetCell& operator*=(const SpreadsheetCell& rhs);
-    SpreadsheetCell& operator/=(const SpreadsheetCell& rhs);
+	double getValue() const { mNumAccesses++; return mValue; }
+	std::string getString() const { mNumAccesses++; return doubleToString(mValue); }
 
-    friend bool operator==(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend bool operator<(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend bool operator>(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend bool operator!=(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend bool operator<=(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    friend bool operator>=(const SpreadsheetCell& lhs,
-        const SpreadsheetCell& rhs);
-    enum class Colors {Red = 1, Green, Blue, Yellow};
-    void setColor(Colors color);
+	static std::string doubleToString(double inValue);
+	static double stringToDouble(std::string_view inString);
+
+	friend SpreadsheetCell operator+(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend SpreadsheetCell operator-(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend SpreadsheetCell operator*(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend SpreadsheetCell operator/(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	SpreadsheetCell& operator+=(const SpreadsheetCell& rhs);
+	SpreadsheetCell& operator-=(const SpreadsheetCell& rhs);
+	SpreadsheetCell& operator*=(const SpreadsheetCell& rhs);
+	SpreadsheetCell& operator/=(const SpreadsheetCell& rhs);
+	friend bool operator==(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend bool operator<(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend bool operator>(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend bool operator!=(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend bool operator<=(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
+	friend bool operator>=(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
 
 private:
-    static std::string doubleToString(double inValue);
-    static double stringToDouble(const std::string& inString);
-    double mValue;
-    std::string mString;
-    mutable int mNumAccesses = 0;
-    Colors mColor = Colors::Red;
+	double mValue = 0;
+	mutable size_t mNumAccesses = 0;
 };
