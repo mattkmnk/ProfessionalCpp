@@ -1,23 +1,22 @@
 #pragma once
 
 #include <string>
-#include <string_view>
 
 class SpreadsheetCell
 {
 public:
 	SpreadsheetCell() = default;
 	SpreadsheetCell(double initialValue);
-	explicit SpreadsheetCell(std::string_view initialValue);
+	explicit SpreadsheetCell(std::string initialValue);
 
 	void set(double inValue);
-	void set(std::string_view inString);
+	void set(std::string inString);
 
 	double getValue() const { mNumAccesses++; return mValue; }
 	std::string getString() const { mNumAccesses++; return doubleToString(mValue); }
 
 	static std::string doubleToString(double inValue);
-	static double stringToDouble(std::string_view inString);
+	static double stringToDouble(std::string inString);
 
 	friend SpreadsheetCell operator+(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);
 	friend SpreadsheetCell operator-(const SpreadsheetCell& lhs, const SpreadsheetCell& rhs);

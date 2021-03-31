@@ -8,7 +8,7 @@ SpreadsheetCell::SpreadsheetCell(double initialValue)
 {
 }
 
-SpreadsheetCell::SpreadsheetCell(string_view initialValue)
+SpreadsheetCell::SpreadsheetCell(string initialValue)
 	: mValue(stringToDouble(initialValue))
 {
 }
@@ -18,7 +18,7 @@ void SpreadsheetCell::set(double inValue)
 	mValue = inValue;
 }
 
-void SpreadsheetCell::set(string_view inString)
+void SpreadsheetCell::set(string inString)
 {
 	mValue = stringToDouble(inString);
 }
@@ -28,7 +28,7 @@ string SpreadsheetCell::doubleToString(double inValue)
 	return to_string(inValue);
 }
 
-double SpreadsheetCell::stringToDouble(string_view inString)
+double SpreadsheetCell::stringToDouble(string inString)
 {
 	return strtod(inString.data(), nullptr);
 }
